@@ -3,7 +3,11 @@ const User = require("../models/users.model");
 exports.findUsers = async (req, res) => {
     const time = req.requestTime;
 
-    const users = await User.findAll();
+    const users = await User.findAll({
+      where: {
+        status: "available",
+      }
+    });
 
     return res.json({
       requestTime: time,
@@ -22,6 +26,7 @@ exports.findUser = async (req, res) => {
     const user = await User.findOne({
       where: {
         id,
+        status: "available",
       },
     });
 
