@@ -12,7 +12,6 @@ exports.findRepairs = async (req, res) => {
     res.json({
       requestTime: time,
       results: repairs.length,
-      status: "success",
       message: "Repairs find",
       repairs
     });
@@ -37,13 +36,6 @@ exports.findRepair = async (req, res) => {
         message: `The repair whith id: ${id} not found!`
       });
     };
-
-    /* if (status !== "pending") {
-      return res.status(404).json({
-        status: "error",
-        message: `The repair isn't pending`
-      });
-    } */
 
     res.json({
       requestTime: time,
@@ -106,7 +98,7 @@ exports.updateStatus = async (req, res) => {
       });
     }
 
-    await repair.update({ status });
+    await repair.update({ status: "completed" });
 
     return res.status(200).json({
       requestTime: time,
@@ -129,7 +121,7 @@ exports.cancelAppointment = async (req, res) => {
     const { id } = req.params;
     const { status } = req.body;
 
-    const user = await Repair.findOne({
+    const repair = await Repair.findOne({
       where: {
         status: "pending",
         id,
@@ -147,6 +139,7 @@ exports.cancelAppointment = async (req, res) => {
 
     return res.status(200).json({
       requestTime: time,
+      repair,
       message: "The repair has been cancelled",
     });
 
